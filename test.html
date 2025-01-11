@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Brain Challenge</title>
+    <!-- Linking to external stylesheet -->
+    <link rel="stylesheet" href="test.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Math Brain Challenge</h1>
+        
+        <!-- Start Button -->
+        <button id="start-button" onclick="startGame()">Start Game</button>
+
+        <!-- Question Area -->
+        <div id="question-area" style="display: none;">
+            <!-- Timer Display -->
+            <div id="timer">Time Remaining: 90s</div>
+            <!-- Question Display -->
+            <p id="question"></p>
+            <!-- Answer Input -->
+            <input type="number" id="user-answer" placeholder="Your answer" />
+            <button onclick="checkAnswer()">Submit</button>
+        </div>
+
+        <!-- Feedback and Score -->
+        <p id="feedback"></p>
+        <p id="score">Score: 0/0</p>
+
+        <!-- Next Level Button -->
+        <button id="next-level" style="display:none;" onclick="nextLevel()">Next Level</button>
+    </div>
+
+    <!-- Linking the JavaScript files -->
+    <script src="test.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
