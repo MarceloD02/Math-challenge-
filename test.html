@@ -1,40 +1,136 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Math Brain Challenge</title>
-    <!-- Linking to external stylesheet -->
-    <link rel="stylesheet" href="test.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Math Challenge</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 20px;
+    }
+    h1 {
+      color: #4CAF50;
+    }
+    .hidden {
+      display: none;
+    }
+    #problem {
+      font-size: 24px;
+      margin: 20px 0;
+    }
+    input {
+      font-size: 20px;
+      padding: 5px;
+      width: 100px;
+    }
+    button {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      cursor: pointer;
+      border-radius: 5px;
+    }
+    button:hover {
+      background-color: #45a049;
+    }
+    #timer, #score {
+      margin: 10px 0;
+      font-size: 20px;
+      color: #333;
+    }
+  </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Math Brain Challenge</h1>
-        
-        <!-- Start Button -->
-        <button id="start-button" onclick="startGame()">Start Game</button>
+  <h1>Math Challenge</h1>
+  <p>Welcome to the Math Challenge! Solve the problems to advance through levels.</p>
+  <button id="startButton">Start Challenge</button>
 
-        <!-- Question Area -->
-        <div id="question-area" style="display: none;">
-            <!-- Timer Display -->
-            <div id="timer">Time Remaining: 90s</div>
-            <!-- Question Display -->
-            <p id="question"></p>
-            <!-- Answer Input -->
-            <input type="number" id="user-answer" placeholder="Your answer" />
-            <button onclick="checkAnswer()">Submit</button>
-        </div>
+  <div id="challenge" class="hidden">
+    <div id="timer">Time left: 90 seconds</div>
+    <div id="problem"></div>
+    <input type="number" id="answer" placeholder="Your answer">
+    <button id="submitAnswer">Submit</button>
+    <div id="score"></div>
+  </div>
 
-        <!-- Feedback and Score -->
-        <p id="feedback"></p>
-        <p id="score">Score: 0/0</p>
+  <script>
+    const startButton = document.getElementById('startButton');
+    const challengeDiv = document.getElementById('challenge');
+    const problemDiv = document.getElementById('problem');
+    const answerInput = document.getElementById('answer');
+    const submitButton = document.getElementById('submitAnswer');
+    const timerDiv = document.getElementById('timer');
+    const scoreDiv = document.getElementById('score');
 
-        <!-- Next Level Button -->
-        <button id="next-level" style="display:none;" onclick="nextLevel()">Next Level</button>
-    </div>
+    let timeLeft = 90;
+    let score = 0;
+    let currentLevel = 1;
+    let currentProblem;
 
-    <!-- Linking the JavaScript files -->
-    <script src="test.js"></script>
-    <script src="script.js"></script>
+    // Generate a random math problem
+    function generateProblem(level) {
+      const maxNumber = level * 10; // Increase difficulty with level
+      const num1 = Math.floor(Math.random() * maxNumber) + 1;
+      const num2 = Math.floor(Math.random() * maxNumber) + 1;
+      const isAddition = Math.random() > 0.5;
+      const problem = isAddition
+        ? { question: `${num1} + ${num2}`, answer: num1 + num2 }
+        : { question: `${num1} - ${num2}`, answer: num1 - num2 };
+      return problem;
+    }
+
+    // Start the timer
+    function startTimer() {
+      const interval = setInterval(() => {
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          endChallenge();
+        } else {
+          timeLeft--;
+          timerDiv.textContent = `Time left: ${timeLeft} seconds`;
+        }
+      }, 1000);
+    }
+
+    // Start the challenge
+    startButton.addEventListener('click', () => {
+      startButton.classList.add('hidden');
+      challengeDiv.classList.remove('hidden');
+      currentProblem = generateProblem(currentLevel);
+      problemDiv.textContent = `Solve: ${currentProblem.question}`;
+      startTimer();
+    });
+
+    // Submit answer
+    submitButton.addEventListener('click', () => {
+      const userAnswer = parseInt(answerInput.value);
+      if (userAnswer === currentProblem.answer) {
+        score++;
+        scoreDiv.textContent = `Score: ${score}`;
+        answerInput.value = '';
+        if (score === 15) {
+          currentLevel++;
+          alert(`Level ${currentLevel - 1} complete! Moving to level ${currentLevel}.`);
+          score = 0;
+          timeLeft = 90;
+        }
+        currentProblem = generateProblem(currentLevel);
+        problemDiv.textContent = `Solve: ${currentProblem.question}`;
+      } else {
+        alert('Wrong answer! Try again.');
+      }
+    });
+
+    // End challenge
+    function endChallenge() {
+      alert(`Time's up! You completed level ${currentLevel} with a score of ${score}.`);
+      location.reload(); // Reload the page to restart
+    }
+  </script>
 </body>
 </html>
